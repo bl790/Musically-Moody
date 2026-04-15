@@ -1,37 +1,76 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [searchMood, setSearchMood] = useState("");
+    const [step, setStep] = useState(1); // tracks question user is being asked
+    const [placeholder, setPlaceholder] = useState("How are you feeling?");
+    const [collectedData, setCollectedData] = useState([]);
+
+    const handleSearch = async (e) => {
+      e.preventDefault(); // Prevents page from reloading
+      if (!searchMood) return;
+      console.log("Step ${step} data collected: ", searchMood);
+
+      const newData = [...collectedData, searchMood];
+      setCollectedData(newData);
+
+      if (step == 1) {
+        fetch(``)
+        .then((response) => response.json())
+        .then((data) => { //sees if answers inputted are valid
+          if (data && data.exists) {
+            setPlaceholder("Name three artists you like...")
+            setStep(2);
+            setSearchMood("");
+          }
+          else {
+            setPlaceholder("Retype the artist again.");
+            setSearchMood("");
+          }
+        })
+      }
+      else if (step == 2){
+        setPlaceholder("Name two more artists you like...")
+        setStep(3);
+      }
+      else if (step == 3){
+        setPlaceholder("Name one more artist you like...")
+        setStep(4);
+      }
+      else if (step == 4){
+        setPlaceholder("Making a list of songs based on your preferences...")
+        setStep(5);
+      }
+      setSearchMood("");
+    };
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Musically Moody</h1>
-          <p>
-            Welcome to our site that makes a list of <strong>songs</strong> based on how you're feeling! Feel free to explore and we hope you have a great time!
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+      <section id="home">
+
+        {/* Makes the search bar */}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+        <form onSubmit={handleSearch}>
+          <div className="search">
+            <input className="search-input" id="type-mood" name="mood" type="search" autoComplete="off" placeholder={placeholder} value={searchMood}
+                   onChange={(e) => setSearchMood(e.target.value)}></input>
+            <button type="submit" className="mood-search" onClick={handleSearch}>SEARCH</button>
+          </div>
+        </form>
+
+        {/* Collects results *
+        <div className="moods">
+          {mood.map((item, index) => (
+            <div key={index} className="mood-item">
+              {item.name}
+            </div>
+          ))}
+        </div> */}
+
       </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
+      {/*<section id="next-steps">
         <div id="docs">
           <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#documentation-icon"></use>
@@ -40,60 +79,13 @@ function App() {
           <p>Your questions, answered</p>
           <ul>
             <li>
-              <a href="https://github.com/bl790/Musically-Moody/tree/main" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Check out about GitHub!
-              </a>
-            </li>
-            <li>
               <a href="https://react.dev/" target="_blank">
                 <img className="button-icon" src={reactLogo} alt="" />
                 Learn more
               </a>
             </li>
           </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-            </li>
-            <li>
-            </li>
-            <li>
-              <a href="https://docs.google.com/document/d/1UNii8YiDxSmtVPFrvNs4QMn2DgnKnULDjLlXhGhhLBM/edit?usp=sharing" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                Link to our Google Doc of links
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/public-apis/public-apis" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Here are some more public APIs to use for our site
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+        </div>*/}
     </>
   )
 }
